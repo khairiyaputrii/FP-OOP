@@ -11,6 +11,7 @@ public class Graphics extends JPanel implements ActionListener {
     public String state;
 
     private Snake s;
+
     private Food f;
     private Game game;
 
