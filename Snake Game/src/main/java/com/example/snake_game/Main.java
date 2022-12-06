@@ -21,7 +21,7 @@ public class Main extends Application {
     private Random random;
     private Circle snake;
 
-    private Direction curretDirection;
+    private Direction currentDirection;
 
     private void newFood(){
         food = new Circle(random.nextInt(WIDTH),random.nextInt(HEIGHT),RADIUS);
@@ -35,20 +35,36 @@ public class Main extends Application {
     }
 
     private void step(){
-        if (curretDirection == Direction.UP) {
+        if (currentDirection == Direction.UP) {
             snake.setCenterY(snake.getCenterY() - STEP);
-        } else if (curretDirection == Direction.DOWN) {
+        } else if (currentDirection == Direction.DOWN) {
             snake.setCenterY(snake.getCenterY() + STEP);
-        } else if (curretDirection == Direction.LEFT) {
+        } else if (currentDirection == Direction.LEFT) {
             snake.setCenterX(snake.getCenterX() - STEP);
-        } else if (curretDirection == Direction.RIGHT) {
+        } else if (currentDirection == Direction.RIGHT) {
             snake.setCenterX(snake.getCenterX() + STEP);
         }
     }
     private void move(){
         Platform.runLater(()->{
             step();
+            adjustLocation();
         });
+    }
+
+    private void adjustLocation(){
+        if(snake.getCenterX()< 0){
+            snake.setCenterX(WIDTH);
+        }
+        else if (snake.getCenterX() > WIDTH) {
+            snake.setCenterX(0);
+        }
+        if(snake.getCenterY()< 0){
+            snake.setCenterY(HEIGHT);
+        }
+        else if (snake.getCenterY() > HEIGHT) {
+            snake.setCenterY(0);
+        }
     }
 
  @Override
@@ -56,7 +72,7 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(WIDTH,HEIGHT);
         random = new Random();
-        curretDirection = Direction.UP;
+        currentDirection = Direction.UP;
 
         newFood();
         newSnake();
@@ -77,13 +93,13 @@ public class Main extends Application {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event-> {
             KeyCode code = event.getCode();
             if (code == KeyCode.UP) {
-                curretDirection = Direction.UP;
+                currentDirection = Direction.UP;
             } else if (code == KeyCode.DOWN) {
-                curretDirection = Direction.DOWN;
+                currentDirection = Direction.DOWN;
             } else if (code == KeyCode.LEFT) {
-                curretDirection = Direction.LEFT;
+                currentDirection = Direction.LEFT;
             } else if (code == KeyCode.RIGHT) {
-                curretDirection = Direction.RIGHT;
+                currentDirection = Direction.RIGHT;
             }
         });
         primaryStage.setTitle("Snake Game");
@@ -96,4 +112,3 @@ public class Main extends Application {
     }
 
 }
-
