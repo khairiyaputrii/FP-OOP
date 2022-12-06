@@ -8,20 +8,23 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 public class Main extends Application {
     private static final int WIDTH = 600;
     private static final int HEIGHT = 500;
     private static final int  RADIUS = 6;
-    private static final int STEP = 8;
+
     private Pane root;
+    private Text score;
     private Circle food;
     private Random random;
-    private Circle snake;
+    private Snake snake;
 
-    private Direction currentDirection;
 
     private void newFood(){
         food = new Circle(random.nextInt(WIDTH),random.nextInt(HEIGHT),RADIUS);
@@ -30,25 +33,23 @@ public class Main extends Application {
     }
 
     private void newSnake(){
-        snake = new Circle(WIDTH/2, HEIGHT/2, RADIUS +2);
+        snake = new Snake(WIDTH/2, HEIGHT/2, RADIUS +2);
         root.getChildren().add(snake);
     }
 
-    private void step(){
-        if (currentDirection == Direction.UP) {
-            snake.setCenterY(snake.getCenterY() - STEP);
-        } else if (currentDirection == Direction.DOWN) {
-            snake.setCenterY(snake.getCenterY() + STEP);
-        } else if (currentDirection == Direction.LEFT) {
-            snake.setCenterX(snake.getCenterX() - STEP);
-        } else if (currentDirection == Direction.RIGHT) {
-            snake.setCenterX(snake.getCenterX() + STEP);
-        }
+    private boolean hit(){
+        return food.intersects(snake.getBoundsInLocal());
     }
+
     private void move(){
         Platform.runLater(()->{
-            step();
+            snake.step();
             adjustLocation();
+            if (hit()){
+                snake.eat(food);
+                score.setText(""+snake.getLength());
+                newFood();
+            }
         });
     }
 
@@ -72,7 +73,7 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(WIDTH,HEIGHT);
         random = new Random();
-        currentDirection = Direction.UP;
+        score = new Text(0,32,"0");
 
         newFood();
         newSnake();
@@ -81,7 +82,7 @@ public class Main extends Application {
             try{
                 for (;;){
                     move();
-                    Thread.sleep(200);
+                    sleep(200);
                 }
             } catch (InterruptedException ie){
 
@@ -93,13 +94,13 @@ public class Main extends Application {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event-> {
             KeyCode code = event.getCode();
             if (code == KeyCode.UP) {
-                currentDirection = Direction.UP;
+                snake.setCurrentDirection(Direction.UP);
             } else if (code == KeyCode.DOWN) {
-                currentDirection = Direction.DOWN;
+                snake.setCurrentDirection(Direction.DOWN);
             } else if (code == KeyCode.LEFT) {
-                currentDirection = Direction.LEFT;
+                snake.setCurrentDirection(Direction.LEFT);
             } else if (code == KeyCode.RIGHT) {
-                currentDirection = Direction.RIGHT;
+                snake.setCurrentDirection(Direction.RIGHT);
             }
         });
         primaryStage.setTitle("Snake Game");
@@ -109,6 +110,10 @@ public class Main extends Application {
         Thread th = new Thread(r);
         th.setDaemon(true);
         th.start();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }
