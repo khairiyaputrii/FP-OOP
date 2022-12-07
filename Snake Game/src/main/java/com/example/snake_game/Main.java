@@ -35,10 +35,18 @@ public class Main extends Application {
     private void newSnake(){
         snake = new Snake(WIDTH/2, HEIGHT/2, RADIUS +2);
         root.getChildren().add(snake);
+//        for (int i = 0; i<25; i ++){
+////            newFood();
+//            snake.eat(food);
+//        }
     }
 
     private boolean hit(){
         return food.intersects(snake.getBoundsInLocal());
+    }
+
+    private boolean gameOver(){
+        return snake.eatSelf();
     }
 
     private void move(){
@@ -48,6 +56,12 @@ public class Main extends Application {
             if (hit()){
                 snake.eat(food);
                 score.setText(""+snake.getLength());
+                newFood();
+            } else if (gameOver()) {
+                root.getChildren().clear();
+                root.getChildren().add(score);
+                score.setText("GAME OVER "+snake.getLength());
+                newSnake();
                 newFood();
             }
         });
@@ -82,7 +96,7 @@ public class Main extends Application {
             try{
                 for (;;){
                     move();
-                    sleep(200);
+                    Thread.sleep(100 / (1+(snake.getLength() /10)));
                 }
             } catch (InterruptedException ie){
 
