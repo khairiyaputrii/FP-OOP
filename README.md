@@ -48,3 +48,6 @@ https://github.com/khairiyaputrii/FP-OOP/blob/83b76686697523f669234065e40af3856a
 https://github.com/khairiyaputrii/FP-OOP/blob/83b76686697523f669234065e40af3856a71bbe7/src/SnakeGame/Snake.java#L31-L32
 15. Input Output
 https://github.com/khairiyaputrii/FP-OOP/blob/83b76686697523f669234065e40af3856a71bbe7/src/SnakeGame/Main.java#L36-L37
+
+# Reference 
+https://youtu.be/l2KZsvaMeLs
